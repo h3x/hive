@@ -7,11 +7,13 @@
     canvas.height = window.innerHeight;
 
     // tile attributes
-    const size = 50;
+    let size = 45;
     const heightSpace =  Math.sqrt(3) * size
     const widthSpace = 2 * size * 3/4;
     const tileCenters:Array<[number, number]> = [];
     const pieces:Hex[] = [];
+    const s_image = new Image();
+    s_image.src = '/assets/grasshopper.png';
  
 
     // called when the canvas needs to be resized
@@ -57,8 +59,8 @@
 
     // calculate the centers of the map tiles to be used for grid snapping later
     function calcCenters(){
-        for(let x = 50; x < canvas.width; x += widthSpace * 2 ) {
-            for(let y = 50; y< canvas.height; y += heightSpace){
+        for(let x = size; x < canvas.width; x += widthSpace * 2 ) {
+            for(let y = size; y< canvas.height; y += heightSpace){
                 ctx.lineWidth = 2;
                 tileCenters.push([x,y]);
                 tileCenters.push([x + widthSpace,y + heightSpace/2]);
@@ -68,6 +70,9 @@
 
     // initial game setup
     function setup(){
+
+        document.body.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
         // calculate the centers of the board tiles
         calcCenters();
 
@@ -85,8 +90,6 @@
             h.setLocation(hx, hy, tileCenters);
             pieces.push(h);
         }
-
-        console.log(pieces) 
 
         // listen for click events
         let selectedHex:Hex|undefined;
@@ -109,22 +112,19 @@
                 })
             }
             else {
-                // TODO: All this is about piece stacking. think about this a little more
+                //TODO: All this is about piece stacking. think about this a little more
                 // pieces.forEach(piece =>{
                 //     if(dist([cx, cy], piece.getLocation()) < size && selectedHex){
                 //         piece.setZ(-1);
                 //         selectedHex.size = 40;
                 //     }
                 // })
-                // console.log(stack)
-                // stack = [];
+                console.log(stack)
+                stack = [];
                 selectedHex.setLocation(cx, cy, tileCenters);
                 pieces.forEach( p => p.unselect())
                 selectedHex = undefined;
             }
-
-
-            //h.setLocation(cx , cy, tileCenters); // TODO change this
         })
 
         //resize the canvas to 100% viewport width and height whenever window is resized
@@ -132,6 +132,8 @@
             resizeCanvas();
             calcCenters();
         }, false);
+
+        
 
         // start the gameloop
         window.setInterval(() => draw(), 20/1000);
@@ -150,9 +152,15 @@
             drawHex(tile[0], tile[1], size);
         })
 
-        pieces.forEach( p => p.draw(ctx))
+        pieces.forEach( p => p.draw(ctx, s_image))
     }
    
+    // this may not be a good idea. have to see if i need it
+    // window.addEventListener('wheel', (evt) => {
+    //     evt.deltaY < 0 ? size -=2 :  size += 2;
+    //     calcCenters()
+    // });
+
     // Setup to initial state of the game
     setup();
 })()

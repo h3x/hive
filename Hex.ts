@@ -95,7 +95,7 @@ class Hex {
         this.setLocation(cx, cy, tiles);
     }
 
-    draw(ctx:CanvasRenderingContext2D){
+    draw(ctx:CanvasRenderingContext2D, img){
         // update the locations of the corners
         this.hex();
 
@@ -120,5 +120,7 @@ class Hex {
         ctx.fillStyle = my_gradient;
         ctx.fill();
         ctx.stroke();
+
+        ctx.drawImage(img, this.x- this.size/2, this.y-this.size/2,img.width * 0.5,img.height *0.5);
     }
 }

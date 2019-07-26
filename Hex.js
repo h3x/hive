@@ -72,7 +72,7 @@ var Hex = /** @class */ (function () {
     Hex.prototype.clickEvent = function (cx, cy, tiles) {
         this.setLocation(cx, cy, tiles);
     };
-    Hex.prototype.draw = function (ctx) {
+    Hex.prototype.draw = function (ctx, img) {
         // update the locations of the corners
         this.hex();
         ctx.strokeStyle = this.stroke;
@@ -93,6 +93,7 @@ var Hex = /** @class */ (function () {
         ctx.fillStyle = my_gradient;
         ctx.fill();
         ctx.stroke();
+        ctx.drawImage(img, this.x - this.size / 2, this.y - this.size / 2, img.width * 0.5, img.height * 0.5);
     };
     return Hex;
 }());
