@@ -57,7 +57,8 @@ var Hex = /** @class */ (function () {
     Hex.prototype.getLocation = function () {
         return [this.x, this.y];
     };
-    Hex.prototype.hex = function () {
+    // 
+    Hex.prototype.calcCorners = function () {
         this.corners = [];
         var lx, ly = 0;
         for (var side = 0; side < 7; side++) {
@@ -66,15 +67,17 @@ var Hex = /** @class */ (function () {
             this.corners.push([lx, ly]);
         }
     };
+    // dont know what to do with this yet. whatever needs updating
     Hex.prototype.update = function () {
         //
     };
+    // event when the object is clicked
     Hex.prototype.clickEvent = function (cx, cy, tiles) {
         this.setLocation(cx, cy, tiles);
     };
     Hex.prototype.draw = function (ctx, img) {
-        // update the locations of the corners
-        this.hex();
+        // update the locations of the corners based on the [x,y] location
+        this.calcCorners();
         ctx.strokeStyle = this.stroke;
         ctx.fillStyle = this.color;
         var _a = this.corners[1], lx = _a[0], ly = _a[1];
@@ -97,3 +100,4 @@ var Hex = /** @class */ (function () {
     };
     return Hex;
 }());
+//# sourceMappingURL=Hex.js.map

@@ -7,20 +7,35 @@
     canvas.height = window.innerHeight;
     // tile attributes
     var size = 45;
+    // spaceing betweeen each hex piece
     var heightSpace = Math.sqrt(3) * size;
     var widthSpace = 2 * size * 3 / 4;
+    // holds the center co-ords of each map tile
     var tileCenters = [];
+    // holds all Hex objects (i.e, game pieces) 
     var pieces = [];
+    // describes the boundries for the hex grid game board
+    var hexBounds = {
+        xStart: 10,
+        xEnd: canvas.width - 10,
+        yStart: 10,
+        yEnd: canvas.height - 100,
+    };
+    //temp
     var s_image = new Image();
     s_image.src = '/assets/grasshopper.png';
+    // endtemp
     // called when the canvas needs to be resized
     function resizeCanvas() {
+        console.log("resizeCanvas function");
+        console.log(canvas.width);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        console.log(canvas.width);
         ctx.fillStyle = '#101115';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    function hex(x, y, size) {
+    function calcHexPoints(x, y, size) {
         var sides = [];
         for (var side = 0; side < 7; side++) {
             var lx = x + size * Math.cos(side * 2 * Math.PI / 6);
@@ -29,9 +44,9 @@
         }
         return sides;
     }
-    function drawHex(x, y, size) {
+    function drawHexBackground(x, y, size) {
         // get all the corner points for the hex
-        var hexPoints = hex(x, y, size);
+        var hexPoints = calcHexPoints(x, y, size);
         // start the path
         ctx.beginPath();
         var s = hexPoints.shift();
@@ -50,11 +65,16 @@
     }
     // calculate the centers of the map tiles to be used for grid snapping later
     function calcCenters() {
-        for (var x = size; x < canvas.width; x += widthSpace * 2) {
-            for (var y = size; y < canvas.height; y += heightSpace) {
+        hexBounds.xEnd = canvas.width - 10;
+        hexBounds.yEnd = canvas.height - 10;
+        for (var x = hexBounds.xStart + size; x < hexBounds.xEnd; x += widthSpace * 2) {
+            for (var y = hexBounds.xStart + size; y < hexBounds.yEnd; y += heightSpace) {
                 ctx.lineWidth = 2;
                 tileCenters.push([x, y]);
-                tileCenters.push([x + widthSpace, y + heightSpace / 2]);
+                // check that the 2nd column wont be outside the canvas
+                if (x + widthSpace < hexBounds.xEnd && y + heightSpace < hexBounds.yEnd) {
+                    tileCenters.push([x + widthSpace, y + heightSpace / 2]);
+                }
             }
         }
     }
@@ -97,7 +117,7 @@
                 });
             }
             else {
-                //TODO: All this is about piece stacking. think about this a little more
+                //TODO: All this is about piece z stacking. think about this a little more
                 // pieces.forEach(piece =>{
                 //     if(dist([cx, cy], piece.getLocation()) < size && selectedHex){
                 //         piece.setZ(-1);
@@ -113,6 +133,7 @@
         });
         //resize the canvas to 100% viewport width and height whenever window is resized
         window.addEventListener('resize', function () {
+            console.log("resize listener");
             resizeCanvas();
             calcCenters();
         }, false);
@@ -126,7 +147,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = 'black';
         tileCenters.forEach(function (tile) {
-            drawHex(tile[0], tile[1], size);
+            drawHexBackground(tile[0], tile[1], size);
         });
         pieces.forEach(function (p) { return p.draw(ctx, s_image); });
     }
@@ -138,3 +159,4 @@
     // Setup to initial state of the game
     setup();
 })();
+//# sourceMappingURL=app.js.map

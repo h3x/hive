@@ -6,26 +6,44 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    
+
     // tile attributes
     let size = 45;
-    const heightSpace =  Math.sqrt(3) * size
+    // spaceing betweeen each hex piece
+    const heightSpace =  Math.sqrt(3) * size;
     const widthSpace = 2 * size * 3/4;
+    // holds the center co-ords of each map tile
     const tileCenters:Array<[number, number]> = [];
+    // holds all Hex objects (i.e, game pieces) 
     const pieces:Hex[] = [];
+
+    // describes the boundries for the hex grid game board
+    const hexBounds = {
+        xStart: 10,
+        xEnd: canvas.width - 10,
+        yStart: 10,
+        yEnd: canvas.height - 100,
+    }
+
+    //temp
     const s_image = new Image();
     s_image.src = '/assets/grasshopper.png';
- 
+    // endtemp
 
     // called when the canvas needs to be resized
     function resizeCanvas() {
+        console.log("resizeCanvas function")
+        console.log(canvas.width)
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        console.log(canvas.width)
         ctx.fillStyle = '#101115';
         ctx.fillRect(0,0,canvas.width, canvas.height);
         
     }
 
-    function hex(x:number, y:number, size:number){
+    function calcHexPoints(x:number, y:number, size:number){
         const sides:Array<[number, number]> = [];
         for(let side = 0; side < 7; side++){
             const lx = x + size * Math.cos(side * 2 * Math.PI / 6);
@@ -35,9 +53,9 @@
         return sides;
     }
 
-    function drawHex(x:number, y:number, size:number){
+    function drawHexBackground(x:number, y:number, size:number){
         // get all the corner points for the hex
-        const hexPoints:Array<[number, number]> = hex(x,y,size);
+        const hexPoints:Array<[number, number]> = calcHexPoints(x,y,size);
         
         // start the path
         ctx.beginPath();
@@ -59,11 +77,18 @@
 
     // calculate the centers of the map tiles to be used for grid snapping later
     function calcCenters(){
-        for(let x = size; x < canvas.width; x += widthSpace * 2 ) {
-            for(let y = size; y< canvas.height; y += heightSpace){
+
+        hexBounds.xEnd = canvas.width - 10;
+        hexBounds.yEnd = canvas.height - 10;
+        
+        for(let x = hexBounds.xStart + size; x < hexBounds.xEnd; x += widthSpace * 2 ) {
+            for(let y = hexBounds.xStart + size; y< hexBounds.yEnd; y += heightSpace){
                 ctx.lineWidth = 2;
                 tileCenters.push([x,y]);
-                tileCenters.push([x + widthSpace,y + heightSpace/2]);
+                // check that the 2nd column wont be outside the canvas
+                if(x + widthSpace < hexBounds.xEnd && y + heightSpace < hexBounds.yEnd){
+                    tileCenters.push([x + widthSpace,y + heightSpace/2]);
+                }
             }
         }
     }
@@ -112,7 +137,7 @@
                 })
             }
             else {
-                //TODO: All this is about piece stacking. think about this a little more
+                //TODO: All this is about piece z stacking. think about this a little more
                 // pieces.forEach(piece =>{
                 //     if(dist([cx, cy], piece.getLocation()) < size && selectedHex){
                 //         piece.setZ(-1);
@@ -129,6 +154,7 @@
 
         //resize the canvas to 100% viewport width and height whenever window is resized
         window.addEventListener('resize', () => {
+            console.log("resize listener")
             resizeCanvas();
             calcCenters();
         }, false);
@@ -149,7 +175,7 @@
         ctx.strokeStyle = 'black';       
 
         tileCenters.forEach( tile => {
-            drawHex(tile[0], tile[1], size);
+            drawHexBackground(tile[0], tile[1], size);
         })
 
         pieces.forEach( p => p.draw(ctx, s_image))

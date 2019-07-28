@@ -77,7 +77,8 @@ class Hex {
         return [this.x, this.y];
     }
 
-    hex(){
+    // 
+    calcCorners(){
         this.corners = [];
         let lx, ly = 0;
         for(let side = 0; side < 7; side++){
@@ -87,17 +88,19 @@ class Hex {
         }
     }
 
+    // dont know what to do with this yet. whatever needs updating
     update(){
         //
     }
 
+    // event when the object is clicked
     clickEvent(cx:number, cy:number, tiles:Array<[number, number]> ){
         this.setLocation(cx, cy, tiles);
     }
 
-    draw(ctx:CanvasRenderingContext2D, img){
-        // update the locations of the corners
-        this.hex();
+    draw(ctx:CanvasRenderingContext2D, img:HTMLImageElement){
+        // update the locations of the corners based on the [x,y] location
+        this.calcCorners();
 
         ctx.strokeStyle = this.stroke;
         ctx.fillStyle = this.color;
