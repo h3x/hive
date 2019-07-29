@@ -1,6 +1,6 @@
 "use strict";
 var Hex = /** @class */ (function () {
-    function Hex(x, y, size) {
+    function Hex(x, y, size, type, player) {
         this.x = x;
         this.y = y;
         this.z = 0;
@@ -9,6 +9,9 @@ var Hex = /** @class */ (function () {
         this.defaultColor = '#101115';
         this.stroke = '#1012f';
         this.corners = [];
+        // todo
+        this.type = type;
+        this.player = player;
     }
     // set the fill color
     Hex.prototype.setColor = function (color) {
@@ -96,7 +99,10 @@ var Hex = /** @class */ (function () {
         ctx.fillStyle = my_gradient;
         ctx.fill();
         ctx.stroke();
-        ctx.drawImage(img, this.x - this.size / 2, this.y - this.size / 2, img.width * 0.5, img.height * 0.5);
+        ctx.font = '30px Ariel';
+        ctx.fillStyle = 'red';
+        ctx.fillText(this.type, this.x - this.size / 4, this.y + this.size / 4);
+        //ctx.drawImage(img, this.x- this.size/2, this.y-this.size/2,img.width * 0.5,img.height *0.5);
     };
     return Hex;
 }());

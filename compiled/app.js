@@ -1,5 +1,5 @@
 "use strict";
-(function () {
+window.onload = function () {
     var canvas = document.getElementById('game');
     var ctx = canvas.getContext('2d');
     // initially size the canvas the same as the viewport size
@@ -88,7 +88,9 @@
         for (var i = 0; i < 10; i++) {
             var hx = Math.floor(Math.random() * canvas.width);
             var hy = Math.floor(Math.random() * canvas.height);
-            var h = new Hex(0, 0, size);
+            var piece = ['Q', 'A', 'B', 'G', 'S', 'L', 'M'][Math.floor(Math.random() * 7)];
+            var player = ['W', 'B'][Math.floor(Math.random() * 2)];
+            var h = new Hex(0, 0, size, piece, player);
             if (i % 2 == 0) {
                 h.setColor('#c5c6c7');
             }
@@ -158,5 +160,5 @@
     // });
     // Setup to initial state of the game
     setup();
-})();
+};
 //# sourceMappingURL=app.js.map

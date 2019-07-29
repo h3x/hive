@@ -1,4 +1,4 @@
-(() => {
+window.onload = () => {
     const canvas = document.getElementById('game') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d') as  CanvasRenderingContext2D;
     
@@ -105,7 +105,9 @@
         for(let i = 0; i < 10; i++){
             const hx = Math.floor(Math.random() * canvas.width);
             const hy = Math.floor(Math.random() * canvas.height);
-            const h = new Hex(0,0, size)
+            const piece = ['Q','A','B','G','S','L','M'][Math.floor(Math.random() * 7)];
+            const player = ['W', 'B'][Math.floor(Math.random() * 2)];
+            const h = new Hex(0,0, size, piece, player)
             if( i % 2 == 0){
                 h.setColor('#c5c6c7');
             }
@@ -189,4 +191,4 @@
 
     // Setup to initial state of the game
     setup();
-})()
+}

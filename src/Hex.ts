@@ -8,7 +8,12 @@ class Hex {
     defaultColor:string;
     corners:Array<[number,number]>;
 
-    constructor(x:number, y:number, size:number){
+    // Piece type: Queen, Ant, Beetle, Grasshopper, Spider, Ladybug, Mosquito
+    // Player: White, Black
+    type:string;
+    player:string;
+    
+    constructor(x:number, y:number, size:number, type:string, player:string){
         this.x = x;
         this.y = y;
         this.z = 0;
@@ -17,6 +22,9 @@ class Hex {
         this.defaultColor = '#101115';
         this.stroke = '#1012f';
         this.corners = [];
+        // todo
+        this.type = type;
+        this.player = player;
         
     }
 
@@ -124,6 +132,9 @@ class Hex {
         ctx.fill();
         ctx.stroke();
 
-        ctx.drawImage(img, this.x- this.size/2, this.y-this.size/2,img.width * 0.5,img.height *0.5);
+        ctx.font = '30px Ariel'
+        ctx.fillStyle = 'red'
+        ctx.fillText(this.type, this.x - this.size/4, this.y + this.size/4)
+        //ctx.drawImage(img, this.x- this.size/2, this.y-this.size/2,img.width * 0.5,img.height *0.5);
     }
 }
